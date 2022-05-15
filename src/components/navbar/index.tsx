@@ -19,7 +19,7 @@ const Navbar = () => {
           <MobileSidebar />
         ) : (
           <MenuItems>
-            <Link passHref href="#">
+            <Link passHref href="#home">
               <Text
                 color={colors.purple}
                 content="Home"
@@ -43,7 +43,7 @@ const Navbar = () => {
                 fontSize="16px"
               />
             </Link>
-            <Link passHref href="#join-waitlist">
+            <Link passHref href="#waitlist">
               <Text
                 color={colors.purple}
                 content="Join Waitlist"

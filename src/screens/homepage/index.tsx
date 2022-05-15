@@ -41,7 +41,7 @@ import {
 const Homepage = () => {
   return (
     <HomepageWrapper>
-      <Introduction>
+      <Introduction id="home">
         <IntroVideo autoPlay loop muted>
           <source
             src="https://storage.googleapis.com/sensen-ventures.appspot.com/nft-collectors.mp4"
@@ -140,7 +140,7 @@ const Homepage = () => {
           }
         />
       </LeadTheChangeWrapper>
-      <EmbedToEarnModel>
+      <EmbedToEarnModel id="earn">
         <Text
           fontWeight={700}
           fontSize="48px"
@@ -231,7 +231,7 @@ const Homepage = () => {
           </EmbedToEarnModelBox>
         </EmbedToEarnModelContainer>
       </EmbedToEarnModel>
-      <EarnWithEmbed>
+      <EarnWithEmbed id="promote">
         <EarnWithEmbedWrapper>
           <Text
             color={colors.darkGrey}
@@ -369,7 +369,7 @@ const Homepage = () => {
         </FaqWrapper>
       </YourQuestionsAnsweredMobile>
 
-      <JoinTheWaitList>
+      <JoinTheWaitList id="waitlist">
         <JoinTheWaitListAction>
           <Text
             color={colors.white}

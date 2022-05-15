@@ -48,19 +48,19 @@ const MobileSidebar = ({}: MobileSidebarProps) => {
               {[
                 {
                   title: "Home",
-                  link: "#",
+                  link: "#home",
                 },
                 {
                   title: "Earn",
-                  link: "#",
+                  link: "#earn",
                 },
                 {
                   title: "Promote",
-                  link: "#",
+                  link: "#promote",
                 },
                 {
                   title: "Join Waitlist",
-                  link: "#",
+                  link: "#waitlist",
                 },
               ].map((item) => (
                 <Link key={item.title} passHref href={item.link}>
