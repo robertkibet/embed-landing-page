@@ -4,7 +4,7 @@ import {combineReducers} from "redux";
 import GetStepsReducer from "./get-steps-reducer";
 
 let persistConfig: {storage: any; key: string; whitelist: string[]};
-let persistedReducers;
+let persistedReducers: any;
 
 const isClient = typeof window !== "undefined";
 
