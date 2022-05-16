@@ -2,6 +2,23 @@ import type {AppProps} from "next/app";
 import {Global, css} from "@emotion/react";
 import Layout from "../layout";
 import Head from "next/head";
+import {Provider} from "react-redux";
+import {PersistGate} from "redux-persist/integration/react";
+import {persistStore} from "redux-persist";
+import {createStore, applyMiddleware} from "redux";
+import {composeWithDevTools} from "redux-devtools-extension/developmentOnly";
+import thunk from "redux-thunk";
+import persistedReducers from "../reducers";
+
+const middleware = [thunk];
+
+const composeEnhancers = composeWithDevTools({});
+
+const store = createStore(
+  persistedReducers(),
+  composeEnhancers(applyMiddleware(...middleware))
+);
+const persistor = persistStore(store);
 
 function MyApp({Component, pageProps}: AppProps) {
   return (
@@ -28,9 +45,14 @@ function MyApp({Component, pageProps}: AppProps) {
           }
         `}
       />
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <Provider store={store}>
+        {/* TODO: maybe make loading be more good looking :) */}
+        <PersistGate loading={<div>loading</div>} persistor={persistor}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </PersistGate>
+      </Provider>
     </>
   );
 }

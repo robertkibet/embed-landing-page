@@ -1,5 +1,8 @@
-import React from "react";
+import React, {useEffect} from "react";
 import Image from "next/image";
+import {connect} from "react-redux";
+import {AnyAction, bindActionCreators, Dispatch} from "redux";
+
 import embedWhiteLogo from "../../../public/assets/embed-white.svg";
 import {
   Content,
@@ -27,18 +30,53 @@ import Text from "../../components/text";
 import {colors} from "../../components/theme";
 import Button from "../../components/button";
 import montageEarnGif from "../../../public/assets/nft-montage-earn.gif";
-import earnStep1 from "../../../public/assets/earn-match.svg";
-import earnStep2 from "../../../public/assets/earn-tokenize.svg";
-import earnStep3 from "../../../public/assets/earn-last-step.svg";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {
-  faArrowRight,
-  faArrowRightLong,
-  faLongArrowAltLeft,
-  faLongArrowAltRight,
-} from "@fortawesome/free-solid-svg-icons";
-const Homepage = () => {
+import {faArrowRightLong} from "@fortawesome/free-solid-svg-icons";
+import ActionCreators from "../../actions";
+
+interface StepsToTake {
+  title: string;
+  content: string;
+  icon: string;
+}
+interface StepsProps {
+  steps: StepsToTake[];
+  loading: boolean;
+  error: Error;
+}
+
+const ShowStepsOrResponse = ({steps, loading, error}: StepsProps) => {
+  if (steps.length > 0) {
+    return (
+      <>
+        {steps?.map((item) => (
+          <>
+            <Steps key={Math.random()}>
+              <Text
+                color={colors.darkGrey}
+                content={item.title}
+                fontWeight={700}
+                fontSize="24px"
+              />
+              <Image src={item.icon} width="54px" height="54px" />
+              <div dangerouslySetInnerHTML={{__html: item.content}} />
+            </Steps>
+          </>
+        ))}
+      </>
+    );
+  }
+
+  if (loading) return <div>loading steps</div>;
+  return <div>Error: {error.message || "Request timed out"}</div>;
+};
+
+const Homepage = (props: any) => {
+  const {steps, loading, error, getSteps} = props;
+
+  useEffect(() => getSteps(), []);
+
   return (
     <HomepageWrapper>
       <Introduction id="home">
@@ -247,65 +285,7 @@ const Homepage = () => {
           />
         </EarnWithEmbedWrapper>
         <EarnWithEmbedSteps>
-          {[
-            {
-              title: "Match",
-              icon: earnStep1,
-              content: () => (
-                <ol>
-                  <li>Join Embed</li>
-                  <li>
-                    Pick and get matched with brands that resonate with the
-                    things youre passionate about
-                  </li>
-                </ol>
-              ),
-            },
-            {
-              title: "Tokenize",
-              icon: earnStep2,
-              content: () => (
-                <ol>
-                  <li>
-                    Get branded NFTs that unlock rewards based on your
-                    engagement in the metaverse
-                  </li>
-                  <li>
-                    Collaborate with brands on long-lasting campaigns in the
-                    Embed network
-                  </li>
-                  <li>
-                    Connect with exclusive communities, build connections,
-                    increase your impact
-                  </li>
-                </ol>
-              ),
-            },
-            {
-              title: "Match",
-              icon: earnStep3,
-              content: () => (
-                <ol>
-                  <li>Collect rewards in tokens and NFT</li>
-                  <li>
-                    Get extra value from exclusive communities, meta-physical
-                    events, and our special offers on products/services
-                  </li>
-                </ol>
-              ),
-            },
-          ].map((item) => (
-            <Steps key={item.title}>
-              <Text
-                color={colors.darkGrey}
-                content={item.title}
-                fontWeight={700}
-                fontSize="24px"
-              />
-              <Image src={item.icon} width="54px" height="54px" />
-              {item.content()}
-            </Steps>
-          ))}
+          <ShowStepsOrResponse steps={steps} loading={loading} error={error} />
         </EarnWithEmbedSteps>
         <Text
           color={colors.darkGrey}
@@ -390,4 +370,15 @@ const Homepage = () => {
   );
 };
 
-export default Homepage;
+const mapStateToProps = ({GetStepsReducer}: any) => ({
+  // GetStepsReducer Reducers
+  type: GetStepsReducer?.type || "",
+  loading: GetStepsReducer?.loading || false,
+  error: GetStepsReducer?.error || {},
+  steps: GetStepsReducer?.steps || [],
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) =>
+  bindActionCreators(ActionCreators, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Homepage);
